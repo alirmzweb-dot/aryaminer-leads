@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Aryaminer — Lead Assignment</title>
+<style>
+  :root {
+    --green: #51B963;
+    --dark: #0D321B;
+    --white: #FFFFFF;
+    --bg: #f0f5f1;
+    --border: #c8e0cd;
+    --text: #0D321B;
+    --soft: #4a7055;
+    --muted: #8aaa90;
+    --tag-bg: #e2f2e6;
+    --tag-border: #a8d4b0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(13,50,27,0.10);
+    padding: 24px 24px 32px;
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1.5px solid var(--border);
+  }
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: var(--dark);
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .logo-title { font-size: 16px; font-weight: 700; color: var(--dark); }
+  .logo-sub { font-size: 11px; color: var(--soft); }
+
+  .field { margin-bottom: 14px; }
+  label { display: block; font-size: 11px; font-weight: 700; color: var(--soft); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  input, select, textarea {
+    width: 100%; padding: 11px 12px;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 16px; color: var(--text); background: var(--white);
+    outline: none; font-family: inherit;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none; appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(81,185,99,0.15);
+  }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a7055' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px; }
+  textarea { resize: vertical; min-height: 70px; }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .country-box {
+    padding: 11px 12px; border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 15px; color: var(--text); background: #f7fbf8;
+    min-height: 46px; display: flex; align-items: center; gap: 6px;
+  }
+  .country-box.ok { border-color: var(--green); background: #edf8f0; }
+  .ph { color: var(--muted); font-size: 13px; }
+
+  .tag-area { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; min-height: 28px; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 13px; padding: 6px 12px; border-radius: 99px;
+    background: var(--tag-bg); border: 1.5px solid var(--tag-border);
+    color: var(--dark); cursor: pointer; font-weight: 500;
+    transition: all 0.15s; user-select: none;
+  }
+  .tag.active { background: var(--green); border-color: #3d9650; color: #fff; }
+  .tag .x { font-size: 15px; line-height: 1; opacity: 0.6; }
+  .add-row { display: flex; gap: 8px; }
+  .add-row input { flex: 1; }
+  .add-btn {
+    padding: 11px 16px; border-radius: 8px; border: 1.5px solid var(--border);
+    background: #f0f7f2; font-size: 14px; font-weight: 600; cursor: pointer;
+    color: var(--soft); white-space: nowrap; transition: all 0.15s;
+  }
+  .add-btn:active { background: var(--tag-bg); }
+
+  hr { border: none; border-top: 1.5px solid var(--border); margin: 18px 0; }
+
+  .mgr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 6px; }
+  .mgr-btn {
+    padding: 14px 4px; font-size: 13px; font-weight: 500;
+    border: 1.5px solid var(--border); border-radius: 9px;
+    background: var(--white); color: var(--text); cursor: pointer;
+    text-align: center; transition: all 0.15s;
+  }
+  .mgr-btn:active { background: var(--tag-bg); }
+  .mgr-btn.selected { background: var(--dark); border-color: var(--dark); color: #fff; font-weight: 700; }
+
+  .submit-btn {
+    width: 100%; padding: 16px; font-size: 16px; font-weight: 700;
+    border-radius: 10px; border: none; background: var(--green); color: #fff;
+    cursor: pointer; margin-top: 8px; letter-spacing: 0.2px;
+    transition: background 0.15s; -webkit-appearance: none;
+  }
+  .submit-btn:active { background: #3d9650; }
+  .submit-btn:disabled { background: #a8d4b0; }
+
+  .alert { display: none; padding: 12px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 14px; }
+  .alert.ok { background: #e6f9ed; border: 1px solid var(--green); color: var(--dark); display: block; }
+  .alert.err { background: #fdecea; border: 1px solid #ea4335; color: #b71c1c; display: block; }
+
+  .spinner { display:none; width:20px; height:20px; border:2.5px solid rgba(255,255,255,0.4); border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite; margin:0 auto; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(13,50,27,0.5); z-index:100; align-items:center; justify-content:center; padding:16px; }
+  .modal-overlay.show { display:flex; }
+  .modal { background:#fff; border-radius:14px; padding:24px; max-width:380px; width:100%; }
+  .modal-icon { font-size:26px; margin-bottom:8px; }
+  .modal-title { font-size:15px; font-weight:700; color:var(--dark); margin-bottom:8px; }
+  .modal-msg { font-size:13px; color:var(--soft); line-height:1.6; margin-bottom:20px; }
+  .modal-msg strong { color:#c62828; }
+  .modal-btns { display:flex; gap:10px; }
+  .modal-btns button { flex:1; padding:12px; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; border:1.5px solid; }
+  .btn-no { background:#fff; border-color:var(--border); color:var(--soft); }
+  .btn-yes { background:#e53935; border-color:#e53935; color:#fff; }
+
+  /* Desktop only padding */
+  @media (min-width: 600px) {
+    body { padding: 32px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo-wrap">
+    <div class="logo-icon">⛏</div>
+    <div>
+      <div class="logo-title">Aryaminer</div>
+      <div class="logo-sub">Lead Assignment System</div>
+    </div>
+  </div>
+
+  <div id="alertBox" class="alert"></div>
+
+  <div class="field">
+    <label>Phone Number</label>
+    <input type="tel" id="phone" placeholder="+971 50 123 4567" oninput="detectCountry(this.value)">
+  </div>
+
+  <div class="row2">
+    <div class="field">
+      <label>Country (auto)</label>
+      <div class="country-box" id="countryBox"><span class="ph">Enter phone</span></div>
+    </div>
+    <div class="field">
+      <label>Date</label>
+      <input type="date" id="date">
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Source / Platform</label>
+    <select id="source">
+      <option value="Website">Website</option>
+      <option value="WhatsApp">WhatsApp</option>
+      <option value="Instagram">Instagram</option>
+      <option value="Facebook">Facebook</option>
+      <option value="Google">Google</option>
+      <option value="Referral">Referral</option>
+      <option value="Other">Other</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label>Campaign Code</label>
+    <div class="tag-area" id="tagArea"></div>
+    <div class="add-row">
+      <input type="text" id="campInput" placeholder="Type or select...">
+      <button class="add-btn" onclick="addTag()">+ Add</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Note (optional)</label>
+    <textarea id="note" placeholder="Any additional info about this lead..."></textarea>
+  </div>
+
+  <hr>
+
+  <div class="field">
+    <label>Assign to Sales Manager</label>
+    <div class="mgr-grid" id="mgrGrid"><div style="color:var(--muted);font-size:13px;padding:8px 0">Loading...</div></div>
+  </div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitLead()">
+    <span id="btnText">Assign Lead</span>
+    <div class="spinner" id="spinner"></div>
+  </button>
+</div>
+
+<div class="modal-overlay" id="dupModal">
+  <div class="modal">
+    <div class="modal-icon">⚠️</div>
+    <div class="modal-title">Duplicate number</div>
+    <div class="modal-msg" id="dupMsg"></div>
+    <div class="modal-btns">
+      <button class="btn-no" onclick="closeDup()">Cancel</button>
+      <button class="btn-yes" onclick="confirmSubmit()">Yes, assign anyway</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONFIG — replace with your Apps Script URL ──
+const API_URL = "https://script.google.com/macros/s/AKfycbya3VWZ2MlsLBlXuWBSVW2d-rh7Z53HgO198HvbT_hz869ZsYZaDWANkLr-5YP8xrX5Rw/exec";
+
+const COUNTRIES = [
+  ["+971","🇦🇪","UAE"],["+966","🇸🇦","Saudi Arabia"],["+968","🇴🇲","Oman"],
+  ["+965","🇰🇼","Kuwait"],["+974","🇶🇦","Qatar"],["+973","🇧🇭","Bahrain"],
+  ["+964","🇮🇶","Iraq"],["+963","🇸🇾","Syria"],["+962","🇯🇴","Jordan"],
+  ["+961","🇱🇧","Lebanon"],["+20","🇪🇬","Egypt"],["+212","🇲🇦","Morocco"],
+  ["+216","🇹🇳","Tunisia"],["+213","🇩🇿","Algeria"],["+218","🇱🇾","Libya"],
+  ["+249","🇸🇩","Sudan"],["+234","🇳🇬","Nigeria"],["+233","🇬🇭","Ghana"],
+  ["+254","🇰🇪","Kenya"],["+27","🇿🇦","South Africa"],["+251","🇪🇹","Ethiopia"],
+  ["+1","🇺🇸","USA/Canada"],["+44","🇬🇧","UK"],["+49","🇩🇪","Germany"],
+  ["+33","🇫🇷","France"],["+31","🇳🇱","Netherlands"],["+98","🇮🇷","Iran"],
+  ["+90","🇹🇷","Turkey"],["+92","🇵🇰","Pakistan"],["+91","🇮🇳","India"],
+  ["+86","🇨🇳","China"],["+7","🇷🇺","Russia"],["+380","🇺🇦","Ukraine"],
+  ["+994","🇦🇿","Azerbaijan"],["+998","🇺🇿","Uzbekistan"],["+60","🇲🇾","Malaysia"],
+  ["+65","🇸🇬","Singapore"],["+62","🇮🇩","Indonesia"],["+66","🇹🇭","Thailand"]
+];
+
+const KEY = "am_camps_v2";
+let tags=[], activeTag=null, selMgr=null, country="", pending=null;
+
+window.onload = () => {
+  document.getElementById("date").value = new Date().toISOString().split("T")[0];
+  loadTags();
+  loadManagers();
+  document.getElementById("campInput").addEventListener("keydown", e => { if(e.key==="Enter") addTag(); });
+};
+
+async function api(body) {
+  const r = await fetch(API_URL, { method:"POST", body: JSON.stringify(body) });
+  return r.json();
+}
+
+// Country detect
+function detectCountry(v) {
+  const c = v.replace(/\s/g,"");
+  const box = document.getElementById("countryBox");
+  if (!c.startsWith("+")) { country=""; box.className="country-box"; box.innerHTML='<span class="ph">Enter phone</span>'; return; }
+  const m = [...COUNTRIES].sort((a,b)=>b[0].length-a[0].length).find(([code])=>c.startsWith(code));
+  if (m) { country=m[2]; box.className="country-box ok"; box.innerHTML=m[1]+" "+m[2]; }
+  else { country=""; box.className="country-box"; box.innerHTML='<span class="ph">Unknown</span>'; }
+}
+
+// Tags
+function loadTags() {
+  try { tags = JSON.parse(localStorage.getItem(KEY)||"[]"); } catch(e){ tags=[]; }
+  if (!tags.includes("organic")) tags.unshift("organic");
+  activeTag="organic"; document.getElementById("campInput").value="organic"; renderTags();
+}
+function saveTags() { try { localStorage.setItem(KEY, JSON.stringify(tags.filter(t=>t!=="organic"))); } catch(e){} }
+function renderTags() {
+  const a = document.getElementById("tagArea"); a.innerHTML="";
+  tags.forEach(t => {
+    const s = document.createElement("span"); s.className="tag"+(activeTag===t?" active":"");
+    s.innerHTML = t+(t!=="organic"?` <span class="x" data-t="${t}">×</span>`:"");
+    s.onclick = e => { if(e.target.classList.contains("x")){ delTag(e.target.dataset.t); return; } activeTag=activeTag===t?null:t; document.getElementById("campInput").value=activeTag||""; renderTags(); };
+    a.appendChild(s);
+  });
+}
+function addTag() { const v=document.getElementById("campInput").value.trim(); if(!v)return; if(!tags.includes(v)){tags.push(v);saveTags();} activeTag=v; document.getElementById("campInput").value=v; renderTags(); }
+function delTag(t) { tags=tags.filter(x=>x!==t); if(activeTag===t){activeTag="organic";document.getElementById("campInput").value="organic";} saveTags(); renderTags(); }
+
+// Managers
+async function loadManagers() {
+  try {
+    const list = await api({ action:"getManagers" });
+    const grid = document.getElementById("mgrGrid"); grid.innerHTML="";
+    if (!list||!list.length) { grid.innerHTML='<div style="color:#e53935;font-size:13px">Failed to load</div>'; return; }
+    list.forEach(m => {
+      const b=document.createElement("button"); b.className="mgr-btn"; b.textContent=m.name;
+      b.id="m_"+m.name.replace(/\s/g,"_"); b.onclick=()=>selManager(m.name); grid.appendChild(b);
+    });
+  } catch(e) { document.getElementById("mgrGrid").innerHTML='<div style="color:#e53935;font-size:13px">Error loading managers</div>'; }
+}
+function selManager(n) { selMgr=n; document.querySelectorAll(".mgr-btn").forEach(b=>b.classList.remove("selected")); document.getElementById("m_"+n.replace(/\s/g,"_")).classList.add("selected"); }
+
+// Submit
+async function submitLead() {
+  const phone=document.getElementById("phone").value.trim();
+  const date=document.getElementById("date").value;
+  const source=document.getElementById("source").value;
+  const campaign=document.getElementById("campInput").value.trim()||activeTag||"organic";
+  const note=document.getElementById("note").value.trim();
+
+  if(!phone){showAlert("err","Enter phone number.");return;}
+  if(!selMgr){showAlert("err","Select a sales manager.");return;}
+
+  pending={phone,country,date,source,campaign,managerName:selMgr,note};
+  setLoading(true);
+
+  try {
+    const dup = await api({action:"checkDuplicate",phone});
+    setLoading(false);
+    if(dup&&dup.found) {
+      const same=dup.assignedTo===selMgr;
+      document.getElementById("dupMsg").innerHTML = same
+        ? "This number was already assigned to <strong>"+dup.assignedTo+"</strong> on "+dup.date+". Assign again?"
+        : "This number was already assigned to <strong>"+dup.assignedTo+"</strong> on "+dup.date+". Assign to <strong>"+selMgr+"</strong>?";
+      document.getElementById("dupModal").classList.add("show");
+    } else { doSubmit(); }
+  } catch(e) { setLoading(false); doSubmit(); }
+}
+
+function closeDup(){document.getElementById("dupModal").classList.remove("show");pending=null;}
+function confirmSubmit(){document.getElementById("dupModal").classList.remove("show");doSubmit();}
+
+async function doSubmit() {
+  if(!pending)return; setLoading(true);
+  try {
+    const res = await api({action:"submitLead",payload:pending});
+    setLoading(false);
+    if(res.success) {
+      showAlert("ok","✓ Assigned to "+pending.managerName+" — "+pending.phone+(pending.country?" ("+pending.country+")":""));
+      pending=null; resetForm();
+    } else { showAlert("err","Error: "+res.message); }
+  } catch(e) { setLoading(false); showAlert("err","Failed: "+e.message); }
+}
+
+function resetForm() {
+  document.getElementById("phone").value=""; document.getElementById("note").value="";
+  country=""; document.getElementById("countryBox").className="country-box"; document.getElementById("countryBox").innerHTML='<span class="ph">Enter phone</span>';
+  document.getElementById("date").value=new Date().toISOString().split("T")[0];
+  selMgr=null; document.querySelectorAll(".mgr-btn").forEach(b=>b.classList.remove("selected"));
+  activeTag="organic"; document.getElementById("campInput").value="organic"; renderTags();
+}
+function setLoading(on){document.getElementById("submitBtn").disabled=on;document.getElementById("btnText").style.display=on?"none":"inline";document.getElementById("spinner").style.display=on?"block":"none";}
+function showAlert(type,msg){const b=document.getElementById("alertBox");b.className="alert "+type;b.textContent=msg;if(type==="ok")setTimeout(()=>b.style.display="none",5000);}
+</script>
+</body>
+</html>
